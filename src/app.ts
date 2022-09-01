@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import * as express from 'express';
 import * as session from 'express-session';
 import * as morgan from 'morgan';
+import { sequelize } from '@models';
 import routes from '@routes';
 
 dotenv.config();
@@ -12,6 +13,15 @@ const app = express();
 const prod = process.env.NODE_ENV === 'production';
 
 app.set('port', process.env.PORT || 8080);
+
+(async function () {
+  try {
+    await sequelize.sync();
+    console.log('db 연결 성공!');
+  } catch (error) {
+    console.error('db 연결 실패...');
+  }
+})();
 
 app.use(
   cors({
