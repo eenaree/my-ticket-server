@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn src/app.ts",
-    "start": "node build/app.js",
+    "start": "ts-node -r tsconfig-paths/register build/app.js",
     "build": "tsc",
     "prepare": "husky install",
     "lint": "eslint --ext .ts src/ --fix && prettier --write **/*.ts"
@@ -22,6 +22,7 @@
     "mysql2": "^2.3.3",
     "sequelize": "^6.21.3",
     "sequelize-cli": "^6.4.1",
+    "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },
   "devDependencies": {
