@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 import { dbConfig } from '@config';
 import { ENV } from '@typings/db';
+import User from './user';
 
 const env = (process.env.NODE_ENV as ENV) || 'development';
 const config = dbConfig[env];
@@ -12,4 +13,8 @@ const sequelize = new Sequelize(
   config
 );
 
-export { sequelize, Sequelize };
+const db = {
+  user: User.initialize(sequelize),
+};
+
+export { sequelize, db };
