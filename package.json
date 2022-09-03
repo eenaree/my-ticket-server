@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn src/app.ts",
-    "start": "ts-node -r tsconfig-paths/register build/app.js",
+    "start": "ts-node build/app.js",
     "build": "tsc",
     "prepare": "husky install",
     "lint": "eslint --ext .ts src/ --fix && prettier --write **/*.ts"
