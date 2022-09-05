@@ -3,10 +3,13 @@ import * as dotenv from 'dotenv';
 import * as express from 'express';
 import * as session from 'express-session';
 import * as morgan from 'morgan';
+import * as passport from 'passport';
 import { sequelize } from '@models';
 import routes from '@routes';
+import { passportConfig } from './passport';
 
 dotenv.config();
+passportConfig();
 
 const app = express();
 
@@ -42,6 +45,8 @@ app.use(
     saveUninitialized: false,
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api', routes);
 
