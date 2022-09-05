@@ -13,8 +13,6 @@ const sequelize = new Sequelize(
   config
 );
 
-const db = {
-  user: User.initialize(sequelize),
-};
+User.initialize(sequelize);
 
-export { sequelize, db };
+export { sequelize };

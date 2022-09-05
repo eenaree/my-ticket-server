@@ -10,8 +10,8 @@
       "@typings/*": ["src/typings/*"]
     },
     "outDir": "./build",
-    "allowJs": true,
-    "target": "es5",
+    "target": "es6",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "lib": ["es2022"],
     "strict": true

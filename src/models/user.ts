@@ -14,6 +14,7 @@ export default class User extends Model<
   declare id: CreationOptional<number>;
   declare email: string;
   declare nickname: string;
+  declare provider: string | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -33,6 +34,7 @@ export default class User extends Model<
           type: DataTypes.STRING,
           allowNull: false,
         },
+        provider: DataTypes.STRING,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
       },
