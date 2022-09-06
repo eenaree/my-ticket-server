@@ -1,5 +1,6 @@
 import * as passport from 'passport';
 import User from '@models/user';
+import { googleStrategy } from './GoogleStrategy';
 import { kakaoStrategy } from './kakaoStrategy';
 
 export function passportConfig() {
@@ -21,4 +22,5 @@ export function passportConfig() {
   });
 
   kakaoStrategy();
+  googleStrategy();
 }
