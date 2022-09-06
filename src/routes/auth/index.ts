@@ -20,4 +20,12 @@ router.get(
   })
 );
 
+router.get('/naver', passport.authenticate('naver'));
+router.get(
+  '/naver/callback',
+  passport.authenticate('naver', {
+    successRedirect: CLIENT_URL,
+  })
+);
+
 export default router;
