@@ -12,6 +12,7 @@ export function googleStrategy() {
         clientID: process.env.GOOGLE_CLIENT_ID as string,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         callbackURL: '/api/auth/google/callback',
+        scope: ['profile'],
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
