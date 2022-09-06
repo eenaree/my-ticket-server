@@ -2,6 +2,7 @@ import * as passport from 'passport';
 import User from '@models/user';
 import { googleStrategy } from './GoogleStrategy';
 import { kakaoStrategy } from './kakaoStrategy';
+import { naverStrategy } from './naverStrategy';
 
 export function passportConfig() {
   passport.serializeUser<number>((user, done) => {
@@ -23,4 +24,5 @@ export function passportConfig() {
 
   kakaoStrategy();
   googleStrategy();
+  naverStrategy();
 }
