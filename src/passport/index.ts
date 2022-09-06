@@ -1,6 +1,6 @@
 import * as passport from 'passport';
 import User from '@models/user';
-import { googleStrategy } from './GoogleStrategy';
+import { googleStrategy } from './googleStrategy';
 import { kakaoStrategy } from './kakaoStrategy';
 import { naverStrategy } from './naverStrategy';
 
