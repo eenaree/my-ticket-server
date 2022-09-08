@@ -28,4 +28,25 @@ router.get(
   })
 );
 
+router.get('/login', (req, res) => {
+  if (req.user) {
+    res.json({
+      success: true,
+      message: '로그인 성공',
+      user: req.user,
+    });
+  } else {
+    res.json({ success: false, message: '로그인 실패' });
+  }
+});
+
+router.post('/logout', (req, res, next) => {
+  req.logout(error => {
+    if (error) {
+      return next(error);
+    }
+    res.json({ success: true, message: '로그아웃 성공' });
+  });
+});
+
 export default router;
