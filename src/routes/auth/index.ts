@@ -36,7 +36,7 @@ router.get('/login', (req, res) => {
       user: req.user,
     });
   } else {
-    res.json({ success: false, message: '로그인 실패' });
+    res.status(401).json({ success: false, message: '로그인 실패' });
   }
 });
 
