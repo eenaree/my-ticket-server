@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 import { dbConfig } from '@config';
 import { ENV } from '@typings/db';
+import Team from './team';
 import User from './user';
 
 const env = (process.env.NODE_ENV as ENV) || 'development';
@@ -14,5 +15,9 @@ const sequelize = new Sequelize(
 );
 
 User.initialize(sequelize);
+Team.initialize(sequelize);
+
+User.belongsToMany(Team, { through: 'TeamFans' });
+Team.belongsToMany(User, { through: 'TeamFans' });
 
 export { sequelize };
