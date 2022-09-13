@@ -8,7 +8,7 @@ export default {
       { team: 'SS' },
       { team: 'LG' },
       { team: 'WO' },
-      { team: 'SSG' },
+      { team: 'SK' },
       { team: 'LT' },
       { team: 'NC' },
       { team: 'HT' },
