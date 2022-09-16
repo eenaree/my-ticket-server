@@ -33,7 +33,6 @@ export const logout: express.RequestHandler = (req, res, next) => {
     if (error) {
       return next(error);
     }
-    // MEMO: redirect? json?
-    // res.redirect(CLIENT_URL);
+    res.json({ success: true, message: '로그아웃 성공' });
   });
 };
