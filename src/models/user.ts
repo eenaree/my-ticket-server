@@ -1,11 +1,16 @@
 import {
   CreationOptional,
   DataTypes,
+  HasManyAddAssociationMixin,
+  HasManyGetAssociationsMixin,
+  HasManyHasAssociationMixin,
+  HasManyRemoveAssociationMixin,
   InferAttributes,
   InferCreationAttributes,
   Model,
   Sequelize,
 } from 'sequelize';
+import Team from './team';
 
 export default class User extends Model<
   InferAttributes<User>,
@@ -17,6 +22,10 @@ export default class User extends Model<
   declare provider: string | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+  declare getTeams: HasManyGetAssociationsMixin<Team>;
+  declare addTeam: HasManyAddAssociationMixin<Team, number>;
+  declare removeTeam: HasManyRemoveAssociationMixin<Team, number>;
+  declare hasTeam: HasManyHasAssociationMixin<Team, number>;
 
   static initialize(sequelize: Sequelize) {
     return User.init(
