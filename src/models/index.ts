@@ -18,6 +18,6 @@ User.initialize(sequelize);
 Team.initialize(sequelize);
 
 User.belongsToMany(Team, { through: 'TeamFans' });
-Team.belongsToMany(User, { through: 'TeamFans' });
+Team.belongsToMany(User, { through: 'TeamFans', as: 'Fans' });
 
 export { sequelize };
