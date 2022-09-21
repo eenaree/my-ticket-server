@@ -9,8 +9,7 @@ export const getMyTeams: express.RequestHandler = async (req, res) => {
   try {
     if (req.user) {
       const teams = await req.user.getTeams();
-      const teamsInfo = teams.map(team => ({ id: team.id, team: team.team }));
-      res.json(teamsInfo);
+      res.json(teams);
     }
   } catch (error) {
     console.error(error);
