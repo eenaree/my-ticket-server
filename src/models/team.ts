@@ -13,8 +13,6 @@ export default class Team extends Model<
 > {
   declare id: CreationOptional<number>;
   declare team: string;
-  declare createdAt: CreationOptional<Date>;
-  declare updatedAt: CreationOptional<Date>;
 
   static initialize(sequelize: Sequelize) {
     return Team.init(
@@ -28,12 +26,11 @@ export default class Team extends Model<
           type: DataTypes.STRING,
           allowNull: false,
         },
-        createdAt: DataTypes.DATE,
-        updatedAt: DataTypes.DATE,
       },
       {
         sequelize,
         charset: 'utf8',
+        timestamps: false,
       }
     );
   }
