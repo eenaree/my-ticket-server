@@ -1,10 +1,10 @@
 import {
+  BelongsToManyAddAssociationMixin,
+  BelongsToManyGetAssociationsMixin,
+  BelongsToManyHasAssociationMixin,
+  BelongsToManyRemoveAssociationMixin,
   CreationOptional,
   DataTypes,
-  HasManyAddAssociationMixin,
-  HasManyGetAssociationsMixin,
-  HasManyHasAssociationMixin,
-  HasManyRemoveAssociationMixin,
   InferAttributes,
   InferCreationAttributes,
   Model,
@@ -22,10 +22,10 @@ export default class User extends Model<
   declare provider: string | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
-  declare getTeams: HasManyGetAssociationsMixin<Team>;
-  declare addTeam: HasManyAddAssociationMixin<Team, number>;
-  declare removeTeam: HasManyRemoveAssociationMixin<Team, number>;
-  declare hasTeam: HasManyHasAssociationMixin<Team, number>;
+  declare getTeams: BelongsToManyGetAssociationsMixin<Team>;
+  declare addTeam: BelongsToManyAddAssociationMixin<Team, number>;
+  declare removeTeam: BelongsToManyRemoveAssociationMixin<Team, number>;
+  declare hasTeam: BelongsToManyHasAssociationMixin<Team, number>;
 
   static initialize(sequelize: Sequelize) {
     return User.init(
