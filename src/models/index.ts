@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 import { dbConfig } from '@config';
 import { ENV } from '@typings/db';
 import Team from './team';
+import Team_Fans from './team_fans';
 import User from './user';
 
 const env = (process.env.NODE_ENV as ENV) || 'development';
@@ -16,8 +17,9 @@ const sequelize = new Sequelize(
 
 User.initialize(sequelize);
 Team.initialize(sequelize);
+Team_Fans.initialize(sequelize);
 
-User.belongsToMany(Team, { through: 'TeamFans' });
-Team.belongsToMany(User, { through: 'TeamFans', as: 'Fans' });
+User.belongsToMany(Team, { through: 'Team_Fans' });
+Team.belongsToMany(User, { through: 'Team_Fans', as: 'Fans' });
 
 export { sequelize };
