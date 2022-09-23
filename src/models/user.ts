@@ -8,6 +8,7 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
   Sequelize,
 } from 'sequelize';
 import Team from './team';
@@ -26,6 +27,7 @@ export default class User extends Model<
   declare addTeam: BelongsToManyAddAssociationMixin<Team, number>;
   declare removeTeam: BelongsToManyRemoveAssociationMixin<Team, number>;
   declare hasTeam: BelongsToManyHasAssociationMixin<Team, number>;
+  declare Teams: NonAttribute<Team[]>;
 
   static initialize(sequelize: Sequelize) {
     return User.init(

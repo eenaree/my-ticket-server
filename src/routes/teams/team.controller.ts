@@ -17,38 +17,62 @@ export const getMyTeams: express.RequestHandler = async (req, res) => {
 };
 
 export const updateMyTeams = async (
-  req: TypedExpressRequest<{ teams: string[] }>,
+  req: TypedExpressRequest<{ teams: { team: string; name: string }[] }>,
   res: express.Response
 ) => {
   try {
     if (req.user) {
-      // 기존 팀 리스트를 순회하면서, 새 팀 리스트에 없는 기존 팀만 따로 모아 관계 삭제
       const exTeams = await req.user.getTeams();
-      if (exTeams.length > 0) {
-        const notExistExTeams = exTeams.filter(exTeam => {
-          return (
-            req.body.teams.findIndex(newTeam => newTeam == exTeam.team) == -1
-          );
-        });
 
-        const removeExTeams = notExistExTeams.map(async exTeam => {
-          await req.user?.removeTeam(exTeam);
+      const notExistExTeams = exTeams.filter(exTeam => {
+        return (
+          req.body.teams.findIndex(newTeam => newTeam.team == exTeam.team) == -1
+        );
+      });
+
+      const existExTeams = exTeams.filter(exTeam => {
+        return (
+          req.body.teams.findIndex(newTeam => newTeam.team == exTeam.team) != -1
+        );
+      });
+
+      // 새 팀 리스트에 없는 기존 팀만 따로 모아 관계 삭제
+      const removeNotExistExTeams = notExistExTeams.map(async exTeam => {
+        await req.user?.removeTeam(exTeam);
+      });
+
+      // 새 팀 리스트에 있는 기존팀의 선호도가 변경된 경우, 선호도만 변경
+      const changeExTeamsPreference = existExTeams.map(async exTeam => {
+        const newTeamIndex = req.body.teams.findIndex(
+          newTeam => newTeam.team == exTeam.team
+        );
+
+        if (newTeamIndex + 1 == exTeam.Team_Fans.preference) return;
+        await req.user?.addTeam(exTeam, {
+          through: { preference: newTeamIndex + 1 },
         });
-        await Promise.all(removeExTeams);
-      }
+      });
 
       // 기존 팀 리스트에 없는 새 팀만 관계 설정 추가
-      const addNewTeams = req.body.teams.map(async newTeam => {
-        const team = await Team.findOne({ where: { team: newTeam } });
-        if (team) {
-          const isMyTeam = await req.user?.hasTeam(team);
-          if (isMyTeam) return;
+      const addNewTeamsPreference = req.body.teams.map(
+        async (newTeam, index) => {
+          const team = await Team.findOne({ where: { team: newTeam.team } });
+          if (team) {
+            const isMyTeam = await req.user?.hasTeam(team);
+            if (isMyTeam) return;
 
-          await req.user?.addTeam(team);
+            await req.user?.addTeam(team, {
+              through: { preference: index + 1 },
+            });
+          }
         }
-      });
-      await Promise.all(addNewTeams);
+      );
 
+      await Promise.all([
+        ...removeNotExistExTeams,
+        ...changeExTeamsPreference,
+        ...addNewTeamsPreference,
+      ]);
       res.send();
     }
   } catch (error) {
