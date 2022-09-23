@@ -9,7 +9,21 @@ export const getMyTeams: express.RequestHandler = async (req, res) => {
   try {
     if (req.user) {
       const teams = await req.user.getTeams();
-      res.json(teams);
+      const teamPreference = teams.reduce<{ [team: string]: number }>(
+        (prev, curr) => {
+          return {
+            ...prev,
+            [curr.team]: curr.Team_Fans.preference,
+          };
+        },
+        {}
+      );
+
+      const teamsSortedByPreference = teams.sort(
+        (a, b) => teamPreference[a.team] - teamPreference[b.team]
+      );
+
+      res.json(teamsSortedByPreference);
     }
   } catch (error) {
     console.error(error);
