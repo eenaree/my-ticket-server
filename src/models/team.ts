@@ -15,7 +15,6 @@ export default class Team extends Model<
 > {
   declare id: CreationOptional<number>;
   declare team: string;
-  declare name: string;
   declare Team_Fans: NonAttribute<Team_Fans>;
 
   static initialize(sequelize: Sequelize) {
@@ -27,10 +26,6 @@ export default class Team extends Model<
           primaryKey: true,
         },
         team: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        name: {
           type: DataTypes.STRING,
           allowNull: false,
         },

@@ -31,7 +31,7 @@ export const getMyTeams: express.RequestHandler = async (req, res) => {
 };
 
 export const updateMyTeams = async (
-  req: TypedExpressRequest<{ teams: { team: string; name: string }[] }>,
+  req: TypedExpressRequest<{ teams: string[] }>,
   res: express.Response
 ) => {
   try {
@@ -40,13 +40,13 @@ export const updateMyTeams = async (
 
       const notExistExTeams = exTeams.filter(exTeam => {
         return (
-          req.body.teams.findIndex(newTeam => newTeam.team == exTeam.team) == -1
+          req.body.teams.findIndex(newTeam => newTeam == exTeam.team) == -1
         );
       });
 
       const existExTeams = exTeams.filter(exTeam => {
         return (
-          req.body.teams.findIndex(newTeam => newTeam.team == exTeam.team) != -1
+          req.body.teams.findIndex(newTeam => newTeam == exTeam.team) != -1
         );
       });
 
@@ -58,7 +58,7 @@ export const updateMyTeams = async (
       // 새 팀 리스트에 있는 기존팀의 선호도가 변경된 경우, 선호도만 변경
       const changeExTeamsPreference = existExTeams.map(async exTeam => {
         const newTeamIndex = req.body.teams.findIndex(
-          newTeam => newTeam.team == exTeam.team
+          newTeam => newTeam == exTeam.team
         );
 
         if (newTeamIndex + 1 == exTeam.Team_Fans.preference) return;
@@ -70,7 +70,7 @@ export const updateMyTeams = async (
       // 기존 팀 리스트에 없는 새 팀만 관계 설정 추가
       const addNewTeamsPreference = req.body.teams.map(
         async (newTeam, index) => {
-          const team = await Team.findOne({ where: { team: newTeam.team } });
+          const team = await Team.findOne({ where: { team: newTeam } });
           if (team) {
             const isMyTeam = await req.user?.hasTeam(team);
             if (isMyTeam) return;
