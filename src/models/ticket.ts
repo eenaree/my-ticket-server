@@ -7,6 +7,9 @@ import {
   Model,
   Sequelize,
 } from 'sequelize';
+import Season from './season';
+import Series from './series';
+import Stadium from './stadium';
 import User from './user';
 
 export default class Ticket extends Model<
@@ -23,6 +26,9 @@ export default class Ticket extends Model<
   declare myTeam: string;
   declare opponentTeam: string;
   declare UserId: ForeignKey<User['id']>;
+  declare SeasonId: ForeignKey<Season['id']>;
+  declare SeriesId: ForeignKey<Series['id']>;
+  declare StadiumId: ForeignKey<Stadium['id']>;
 
   static initialize(sequelize: Sequelize) {
     return Ticket.init(
