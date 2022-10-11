@@ -2,7 +2,7 @@ import { QueryInterface } from 'sequelize';
 
 export default {
   up: (queryInterface: QueryInterface) => {
-    return queryInterface.bulkInsert('seasons', [
+    return queryInterface.bulkInsert('stadiums', [
       { stadium: '수원 KT 위즈 파크', TeamId: 1 },
       { stadium: '서울 잠실야구장(두산)', TeamId: 2 },
       { stadium: '대구 삼성 라이온즈 파크', TeamId: 3 },
@@ -16,6 +16,6 @@ export default {
     ]);
   },
   down: (queryInterface: QueryInterface) => {
-    return queryInterface.bulkDelete('seasons', []);
+    return queryInterface.bulkDelete('stadiums', []);
   },
 };
