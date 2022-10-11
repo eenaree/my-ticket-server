@@ -32,6 +32,7 @@ export default class Stadium extends Model<
       },
       {
         sequelize,
+        tableName: 'stadiums',
         timestamps: false,
         charset: 'utf8',
       }
