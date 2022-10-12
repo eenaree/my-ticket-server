@@ -2,12 +2,14 @@ import {
   CreationOptional,
   DataTypes,
   ForeignKey,
+  HasManyAddAssociationMixin,
   InferAttributes,
   InferCreationAttributes,
   Model,
   Sequelize,
 } from 'sequelize';
 import Team from './team';
+import Ticket from './ticket';
 
 export default class Stadium extends Model<
   InferAttributes<Stadium>,
@@ -16,6 +18,7 @@ export default class Stadium extends Model<
   declare id: CreationOptional<number>;
   declare stadium: string;
   declare TeamId: ForeignKey<Team['id']>;
+  declare addTicket: HasManyAddAssociationMixin<Ticket, number>;
 
   static initialize(sequelize: Sequelize) {
     return Stadium.init(
