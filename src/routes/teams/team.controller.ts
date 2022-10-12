@@ -1,5 +1,5 @@
 import * as express from 'express';
-import Team from '@models/team';
+import { db } from '@models';
 
 interface TypedExpressRequest<T> extends express.Request {
   body: T;
@@ -70,7 +70,7 @@ export const updateMyTeams = async (
       // 기존 팀 리스트에 없는 새 팀만 관계 설정 추가
       const addNewTeamsPreference = req.body.teams.map(
         async (newTeam, index) => {
-          const team = await Team.findOne({ where: { team: newTeam } });
+          const team = await db.Team.findOne({ where: { team: newTeam } });
           if (team) {
             const isMyTeam = await req.user?.hasTeam(team);
             if (isMyTeam) return;
