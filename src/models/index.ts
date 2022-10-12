@@ -19,13 +19,15 @@ const sequelize = new Sequelize(
   config
 );
 
-User.initialize(sequelize);
-Team.initialize(sequelize);
-Team_Fans.initialize(sequelize);
-Season.initialize(sequelize);
-Series.initialize(sequelize);
-Stadium.initialize(sequelize);
-Ticket.initialize(sequelize);
+const db = {
+  User: User.initialize(sequelize),
+  Team: Team.initialize(sequelize),
+  Team_Fans: Team_Fans.initialize(sequelize),
+  Season: Season.initialize(sequelize),
+  Series: Series.initialize(sequelize),
+  Stadium: Stadium.initialize(sequelize),
+  Ticket: Ticket.initialize(sequelize),
+};
 
 User.belongsToMany(Team, { through: 'Team_Fans' });
 Team.belongsToMany(User, { through: 'Team_Fans', as: 'Fans' });
@@ -48,4 +50,4 @@ Ticket.belongsTo(Series);
 Stadium.hasMany(Ticket);
 Ticket.belongsTo(Stadium);
 
-export { sequelize };
+export { sequelize, db };
