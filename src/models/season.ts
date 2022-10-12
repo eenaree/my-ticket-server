@@ -1,11 +1,13 @@
 import {
   CreationOptional,
   DataTypes,
+  HasManyAddAssociationMixin,
   InferAttributes,
   InferCreationAttributes,
   Model,
   Sequelize,
 } from 'sequelize';
+import Ticket from './ticket';
 
 export default class Season extends Model<
   InferAttributes<Season>,
@@ -13,6 +15,7 @@ export default class Season extends Model<
 > {
   declare id: CreationOptional<number>;
   declare season: string;
+  declare addTicket: HasManyAddAssociationMixin<Ticket, number>;
 
   static initialize(sequelize: Sequelize) {
     return Season.init(

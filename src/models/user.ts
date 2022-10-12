@@ -5,6 +5,7 @@ import {
   BelongsToManyRemoveAssociationMixin,
   CreationOptional,
   DataTypes,
+  HasManyAddAssociationMixin,
   InferAttributes,
   InferCreationAttributes,
   Model,
@@ -12,6 +13,7 @@ import {
   Sequelize,
 } from 'sequelize';
 import Team from './team';
+import Ticket from './ticket';
 
 export default class User extends Model<
   InferAttributes<User>,
@@ -28,6 +30,7 @@ export default class User extends Model<
   declare removeTeam: BelongsToManyRemoveAssociationMixin<Team, number>;
   declare hasTeam: BelongsToManyHasAssociationMixin<Team, number>;
   declare Teams: NonAttribute<Team[]>;
+  declare addTicket: HasManyAddAssociationMixin<Ticket, number>;
 
   static initialize(sequelize: Sequelize) {
     return User.init(
