@@ -61,3 +61,22 @@ export const createTicket: express.RequestHandler = async (
     console.error(error);
   }
 };
+
+export const getMyTickets: express.RequestHandler = async (req, res) => {
+  try {
+    if (req.user) {
+      const tickets = await db.Ticket.findAll({
+        where: { UserId: req.user.id },
+        include: [
+          { model: db.Season },
+          { model: db.Series },
+          { model: db.Stadium },
+        ],
+      });
+
+      res.send(tickets);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
