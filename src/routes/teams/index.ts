@@ -5,6 +5,6 @@ import * as controller from './team.controller';
 const router = express.Router();
 
 router.get('/', isLoggedIn, controller.getMyTeams);
-router.post('/update', isLoggedIn, controller.updateMyTeams);
+router.post('/', isLoggedIn, controller.updateMyTeams);
 
 export default router;
