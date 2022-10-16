@@ -6,7 +6,11 @@ interface TypedExpressRequest<T> extends express.Request {
 }
 
 interface TicketBody {
-  matchDate: string;
+  matchDate: {
+    year: number;
+    month: number;
+    date: number;
+  };
   matchSeason: string;
   matchSeries: string;
   homeTeam: string;

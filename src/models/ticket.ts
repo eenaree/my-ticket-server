@@ -17,7 +17,7 @@ export default class Ticket extends Model<
   InferCreationAttributes<Ticket>
 > {
   declare id: CreationOptional<number>;
-  declare date: string;
+  declare date: Date;
   declare homeTeam: string;
   declare awayTeam: string;
   declare homeTeamScore: number;
@@ -39,8 +39,14 @@ export default class Ticket extends Model<
           primaryKey: true,
         },
         date: {
-          type: DataTypes.STRING,
+          type: DataTypes.DATEONLY,
           allowNull: false,
+          set(value: { year: number; month: number; date: number }) {
+            this.setDataValue(
+              'date',
+              new Date(value.year, value.month - 1, value.date)
+            );
+          },
         },
         homeTeam: {
           type: DataTypes.STRING,
