@@ -67,9 +67,15 @@ export default class Ticket extends Model<
           allowNull: false,
         },
         opponentTeam: {
-          type: DataTypes.VIRTUAL,
+          type: new DataTypes.VIRTUAL(DataTypes.STRING, [
+            'homeTeam',
+            'awayTeam',
+            'myTeam',
+          ]),
           get() {
-            return this.homeTeam == this.myTeam ? this.awayTeam : this.homeTeam;
+            return this.get('homeTeam') == this.get('myTeam')
+              ? this.get('awayTeam')
+              : this.get('homeTeam');
           },
           set() {
             throw new Error('Do not set the `opponentTeam` value');
