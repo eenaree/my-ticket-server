@@ -21,7 +21,6 @@ interface TicketBody {
   };
   scoreType: string;
   myTeam: string;
-  opponentTeam: string;
   stadium: string;
 }
 
@@ -50,7 +49,6 @@ export const createTicket: express.RequestHandler = async (
         homeTeam: req.body.homeTeam,
         awayTeam: req.body.awayTeam,
         myTeam: req.body.myTeam,
-        opponentTeam: req.body.opponentTeam,
         scoreType: req.body.scoreType,
         homeTeamScore: req.body.score.homeTeam,
         awayTeamScore: req.body.score.awayTeam,

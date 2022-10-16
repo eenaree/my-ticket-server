@@ -24,7 +24,7 @@ export default class Ticket extends Model<
   declare awayTeamScore: number;
   declare scoreType: string;
   declare myTeam: string;
-  declare opponentTeam: string;
+  declare opponentTeam: string | null;
   declare UserId: ForeignKey<User['id']>;
   declare SeasonId: ForeignKey<Season['id']>;
   declare SeriesId: ForeignKey<Series['id']>;
@@ -67,8 +67,13 @@ export default class Ticket extends Model<
           allowNull: false,
         },
         opponentTeam: {
-          type: DataTypes.STRING,
-          allowNull: false,
+          type: DataTypes.VIRTUAL,
+          get() {
+            return this.homeTeam == this.myTeam ? this.awayTeam : this.homeTeam;
+          },
+          set() {
+            throw new Error('Do not set the `opponentTeam` value');
+          },
         },
       },
       {
