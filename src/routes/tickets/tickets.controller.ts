@@ -6,7 +6,11 @@ interface TypedExpressRequest<T> extends express.Request {
 }
 
 interface TicketBody {
-  matchDate: string;
+  matchDate: {
+    year: number;
+    month: number;
+    date: number;
+  };
   matchSeason: string;
   matchSeries: string;
   homeTeam: string;
@@ -38,7 +42,11 @@ export const createTicket: express.RequestHandler = async (
 
     if (req.user) {
       const ticket = await db.Ticket.create({
-        date: req.body.matchDate,
+        date: new Date(
+          req.body.matchDate.year,
+          req.body.matchDate.month - 1,
+          req.body.matchDate.date
+        ),
         homeTeam: req.body.homeTeam,
         awayTeam: req.body.awayTeam,
         myTeam: req.body.myTeam,
