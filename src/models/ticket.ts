@@ -41,12 +41,6 @@ export default class Ticket extends Model<
         date: {
           type: DataTypes.DATEONLY,
           allowNull: false,
-          set(value: { year: number; month: number; date: number }) {
-            this.setDataValue(
-              'date',
-              new Date(value.year, value.month - 1, value.date)
-            );
-          },
         },
         homeTeam: {
           type: DataTypes.STRING,
