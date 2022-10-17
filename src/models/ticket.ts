@@ -1,4 +1,5 @@
 import {
+  BelongsToManyAddAssociationsMixin,
   CreationOptional,
   DataTypes,
   ForeignKey,
@@ -25,8 +26,8 @@ export default class Ticket extends Model<
   declare myTeam: string;
   declare opponentTeam: string | null;
   declare UserId: ForeignKey<User['id']>;
-  declare SeasonId: ForeignKey<Season['id']>;
   declare StadiumId: ForeignKey<Stadium['id']>;
+  declare addSeasons: BelongsToManyAddAssociationsMixin<Season, number>;
 
   static initialize(sequelize: Sequelize) {
     return Ticket.init(

@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { db } from '@models';
+import Season from '@models/season';
 
 interface TypedExpressRequest<T> extends express.Request {
   body: T;
@@ -11,7 +12,7 @@ interface TicketBody {
     month: number;
     date: number;
   };
-  matchSeason: string;
+  seasons: string[];
   homeTeam: string;
   awayTeam: string;
   score: {
@@ -28,9 +29,6 @@ export const createTicket: express.RequestHandler = async (
   res
 ) => {
   try {
-    const season = await db.Season.findOne({
-      where: { season: req.body.matchSeason },
-    });
     const stadium = await db.Stadium.findOne({
       where: { stadium: req.body.stadium },
     });
@@ -48,15 +46,17 @@ export const createTicket: express.RequestHandler = async (
         scoreType: req.body.scoreType,
         homeTeamScore: req.body.score.homeTeam,
         awayTeamScore: req.body.score.awayTeam,
+        UserId: req.user.id,
+        StadiumId: stadium ? stadium.id : undefined,
       });
 
-      const addTicketAssociation = [
-        req.user.addTicket(ticket),
-        season && season.addTicket(ticket),
-        stadium && stadium.addTicket(ticket),
-      ];
-      await Promise.all(addTicketAssociation);
-      res.send({ ...ticket, season, stadium });
+      const seasons = await Promise.all(
+        req.body.seasons.map(season => db.Season.findOne({ where: { season } }))
+      );
+      await ticket.addSeasons(
+        seasons.filter((season): season is Season => season instanceof Season)
+      );
+      res.send(ticket);
     }
   } catch (error) {
     console.error(error);
