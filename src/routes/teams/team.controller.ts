@@ -38,34 +38,30 @@ export const updateMyTeams = async (
     if (req.user) {
       const exTeams = await req.user.getTeams();
 
-      const notExistExTeams = exTeams.filter(exTeam => {
-        return (
-          req.body.teams.findIndex(newTeam => newTeam == exTeam.team) == -1
-        );
-      });
-
-      const existExTeams = exTeams.filter(exTeam => {
-        return (
-          req.body.teams.findIndex(newTeam => newTeam == exTeam.team) != -1
-        );
-      });
-
       // 새 팀 리스트에 없는 기존 팀만 따로 모아 관계 삭제
-      const removeNotExistExTeams = notExistExTeams.map(async exTeam => {
-        await req.user?.removeTeam(exTeam);
-      });
+      const removeNotExistExTeams = exTeams
+        .filter(
+          exTeam =>
+            req.body.teams.findIndex(newTeam => newTeam == exTeam.team) == -1
+        )
+        .map(exTeam => req.user?.removeTeam(exTeam));
 
       // 새 팀 리스트에 있는 기존팀의 선호도가 변경된 경우, 선호도만 변경
-      const changeExTeamsPreference = existExTeams.map(async exTeam => {
-        const newTeamIndex = req.body.teams.findIndex(
-          newTeam => newTeam == exTeam.team
-        );
+      const changeExTeamsPreference = exTeams
+        .filter(
+          exTeam =>
+            req.body.teams.findIndex(newTeam => newTeam == exTeam.team) != -1
+        )
+        .map(exTeam => {
+          const newTeamIndex = req.body.teams.findIndex(
+            newTeam => newTeam == exTeam.team
+          );
 
-        if (newTeamIndex + 1 == exTeam.Team_Fans.preference) return;
-        await req.user?.addTeam(exTeam, {
-          through: { preference: newTeamIndex + 1 },
+          if (newTeamIndex + 1 == exTeam.Team_Fans.preference) return;
+          return req.user?.addTeam(exTeam, {
+            through: { preference: newTeamIndex + 1 },
+          });
         });
-      });
 
       // 기존 팀 리스트에 없는 새 팀만 관계 설정 추가
       const addNewTeamsPreference = req.body.teams.map(
