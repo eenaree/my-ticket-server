@@ -2,7 +2,6 @@ import { Sequelize } from 'sequelize';
 import { dbConfig } from '@config';
 import { ENV } from '@typings/db';
 import Season from './season';
-import Series from './series';
 import Stadium from './stadium';
 import Team from './team';
 import Team_Fans from './team_fans';
@@ -24,16 +23,12 @@ const db = {
   Team: Team.initialize(sequelize),
   Team_Fans: Team_Fans.initialize(sequelize),
   Season: Season.initialize(sequelize),
-  Series: Series.initialize(sequelize),
   Stadium: Stadium.initialize(sequelize),
   Ticket: Ticket.initialize(sequelize),
 };
 
 User.belongsToMany(Team, { through: 'Team_Fans' });
 Team.belongsToMany(User, { through: 'Team_Fans', as: 'Fans' });
-
-Season.hasMany(Series);
-Series.belongsTo(Season);
 
 Team.hasMany(Stadium);
 Stadium.belongsTo(Team);
@@ -43,9 +38,6 @@ Ticket.belongsTo(User);
 
 Season.hasMany(Ticket);
 Ticket.belongsTo(Season);
-
-Series.hasMany(Ticket);
-Ticket.belongsTo(Series);
 
 Stadium.hasMany(Ticket);
 Ticket.belongsTo(Stadium);

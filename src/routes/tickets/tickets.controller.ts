@@ -12,7 +12,6 @@ interface TicketBody {
     date: number;
   };
   matchSeason: string;
-  matchSeries: string;
   homeTeam: string;
   awayTeam: string;
   score: {
@@ -31,9 +30,6 @@ export const createTicket: express.RequestHandler = async (
   try {
     const season = await db.Season.findOne({
       where: { season: req.body.matchSeason },
-    });
-    const series = await db.Series.findOne({
-      where: { series: req.body.matchSeries },
     });
     const stadium = await db.Stadium.findOne({
       where: { stadium: req.body.stadium },
@@ -57,11 +53,10 @@ export const createTicket: express.RequestHandler = async (
       const addTicketAssociation = [
         req.user.addTicket(ticket),
         season && season.addTicket(ticket),
-        series && series.addTicket(ticket),
         stadium && stadium.addTicket(ticket),
       ];
       await Promise.all(addTicketAssociation);
-      res.send({ ...ticket, series, season, stadium });
+      res.send({ ...ticket, season, stadium });
     }
   } catch (error) {
     console.error(error);
@@ -73,11 +68,7 @@ export const getMyTickets: express.RequestHandler = async (req, res) => {
     if (req.user) {
       const tickets = await db.Ticket.findAll({
         where: { UserId: req.user.id },
-        include: [
-          { model: db.Season },
-          { model: db.Series },
-          { model: db.Stadium },
-        ],
+        include: [{ model: db.Season }, { model: db.Stadium }],
       });
 
       res.send(tickets);
