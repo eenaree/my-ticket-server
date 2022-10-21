@@ -68,7 +68,13 @@ export const getMyTickets: express.RequestHandler = async (req, res) => {
     if (req.user) {
       const tickets = await db.Ticket.findAll({
         where: { UserId: req.user.id },
-        include: [{ model: db.Season }, { model: db.Stadium }],
+        attributes: {
+          exclude: ['UserId', 'StadiumId'],
+        },
+        include: [
+          { model: db.Season, through: { attributes: [] } },
+          { model: db.Stadium },
+        ],
       });
 
       res.send(tickets);
