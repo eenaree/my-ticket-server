@@ -6,3 +6,7 @@ export type ENV = 'development' | 'test' | 'production';
 export interface TypedExpressQuery<T extends ParsedQs> extends express.Request {
   query: T;
 }
+
+export interface TypedExpressBody<T> extends express.Request {
+  body: T;
+}

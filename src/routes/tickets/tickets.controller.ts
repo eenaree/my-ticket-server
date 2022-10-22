@@ -3,11 +3,7 @@ import { InferAttributes, Op, WhereOptions } from 'sequelize';
 import { db } from '@models';
 import Season from '@models/season';
 import Ticket from '@models/ticket';
-import { TypedExpressQuery } from '@typings/db';
-
-interface TypedExpressRequest<T> extends express.Request {
-  body: T;
-}
+import { TypedExpressBody, TypedExpressQuery } from '@typings/db';
 
 interface TicketBody {
   matchDate: {
@@ -27,10 +23,10 @@ interface TicketBody {
   stadium: string;
 }
 
-export const createTicket: express.RequestHandler = async (
-  req: TypedExpressRequest<TicketBody>,
-  res
-) => {
+export async function createTicket(
+  req: TypedExpressBody<TicketBody>,
+  res: express.Response<Ticket>
+) {
   try {
     const stadium = await db.Stadium.findOne({
       where: { stadium: req.body.stadium },
@@ -64,7 +60,7 @@ export const createTicket: express.RequestHandler = async (
   } catch (error) {
     console.error(error);
   }
-};
+}
 
 export const getMyTickets = async (
   req: TypedExpressQuery<{ lastDate?: string; lastId?: string }>,

@@ -1,11 +1,12 @@
 import * as express from 'express';
 import { db } from '@models';
+import Team from '@models/team';
+import { TypedExpressBody } from '@typings/db';
 
-interface TypedExpressRequest<T> extends express.Request {
-  body: T;
-}
-
-export const getMyTeams: express.RequestHandler = async (req, res) => {
+export async function getMyTeams(
+  req: express.Request,
+  res: express.Response<Team[]>
+) {
   try {
     if (req.user) {
       const teams = await req.user.getTeams();
@@ -28,12 +29,12 @@ export const getMyTeams: express.RequestHandler = async (req, res) => {
   } catch (error) {
     console.error(error);
   }
-};
+}
 
-export const updateMyTeams = async (
-  req: TypedExpressRequest<{ teams: string[] }>,
+export async function updateMyTeams(
+  req: TypedExpressBody<{ teams: string[] }>,
   res: express.Response
-) => {
+) {
   try {
     if (req.user) {
       const exTeams = await req.user.getTeams();
@@ -88,4 +89,4 @@ export const updateMyTeams = async (
   } catch (error) {
     console.error(error);
   }
-};
+}
