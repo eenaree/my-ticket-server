@@ -1,6 +1,9 @@
 import * as express from 'express';
+import { InferAttributes, Op, WhereOptions } from 'sequelize';
 import { db } from '@models';
 import Season from '@models/season';
+import Ticket from '@models/ticket';
+import { TypedExpressQuery } from '@typings/db';
 
 interface TypedExpressRequest<T> extends express.Request {
   body: T;
@@ -63,12 +66,45 @@ export const createTicket: express.RequestHandler = async (
   }
 };
 
-export const getMyTickets: express.RequestHandler = async (req, res) => {
+export const getMyTickets = async (
+  req: TypedExpressQuery<{ lastDate?: string; lastId?: string }>,
+  res: express.Response<Ticket[]>
+) => {
   try {
     if (req.user) {
+      let whereClause: WhereOptions<InferAttributes<Ticket>> = {
+        UserId: req.user.id,
+      };
+      if (req.query.lastDate && req.query.lastId) {
+        whereClause = {
+          UserId: req.user.id,
+          [Op.or]: [
+            {
+              date: {
+                [Op.lt]: new Date(req.query.lastDate), // lastDate 이전 날짜 티켓
+              },
+            },
+            {
+              [Op.and]: [
+                { date: { [Op.eq]: new Date(req.query.lastDate) } },
+                { id: { [Op.gt]: req.query.lastId } }, // lastDate 와 동일한 날짜의 티켓이면서 가져오지 않은 티켓
+              ],
+            },
+          ],
+        };
+      }
+
       const tickets = await db.Ticket.findAll({
-        where: { UserId: req.user.id },
-        include: [{ model: db.Season }, { model: db.Stadium }],
+        where: whereClause,
+        attributes: {
+          exclude: ['UserId', 'StadiumId'],
+        },
+        include: [
+          { model: db.Season, through: { attributes: [] } },
+          { model: db.Stadium },
+        ],
+        order: [['date', 'DESC']],
+        limit: 10,
       });
 
       res.send(tickets);
