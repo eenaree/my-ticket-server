@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import type { Options } from 'sequelize';
-import { ENV } from '@typings/db';
+import { ENV } from '~/typings/db';
 
 dotenv.config();
 

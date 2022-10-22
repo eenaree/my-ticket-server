@@ -1,7 +1,7 @@
 import * as express from 'express';
-import { db } from '@models';
-import Team from '@models/team';
-import { TypedExpressBody } from '@typings/db';
+import { db } from '~/models';
+import Team from '~/models/team';
+import { TypedExpressBody } from '~/typings/db';
 
 export async function getMyTeams(
   req: express.Request,

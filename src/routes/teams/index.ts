@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { isLoggedIn } from '@middlewares';
+import { isLoggedIn } from '~/middlewares';
 import * as controller from './team.controller';
 
 const router = express.Router();

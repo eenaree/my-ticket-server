@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
-import { dbConfig } from '@config';
-import { ENV } from '@typings/db';
+import { dbConfig } from '~/config/config';
+import { ENV } from '~/typings/db';
 import Season from './season';
 import Season_Tickets from './season_tickets';
 import Stadium from './stadium';

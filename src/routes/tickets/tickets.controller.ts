@@ -1,9 +1,9 @@
 import * as express from 'express';
 import { InferAttributes, Op, WhereOptions } from 'sequelize';
-import { db } from '@models';
-import Season from '@models/season';
-import Ticket from '@models/ticket';
-import { TypedExpressBody, TypedExpressQuery } from '@typings/db';
+import { db } from '~/models';
+import Season from '~/models/season';
+import Ticket from '~/models/ticket';
+import { TypedExpressBody, TypedExpressQuery } from '~/typings/db';
 
 interface TicketBody {
   matchDate: {

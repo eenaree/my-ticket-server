@@ -2,13 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@config": ["src/config/config.ts"],
-      "@models": ["src/models"],
-      "@models/*": ["src/models/*"],
-      "@routes": ["src/routes"],
-      "@routes/*": ["src/routes/*"],
-      "@typings/*": ["src/typings/*"],
-      "@middlewares": ["src/middlewares"]
+      "~/*": ["src/*"],
     },
     "outDir": "./build",
     "target": "es6",
