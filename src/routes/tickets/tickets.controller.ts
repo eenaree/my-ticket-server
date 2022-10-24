@@ -100,7 +100,7 @@ export const getMyTickets = async (
           { model: db.Stadium },
         ],
         order: [['date', 'DESC']],
-        limit: 10,
+        limit: 20,
       });
 
       res.send(tickets);
