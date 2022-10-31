@@ -17,7 +17,7 @@ export const authController = {
 
   login(req: express.Request, res: express.Response) {
     if (req.user) {
-      res.send(req.user);
+      res.send({ user: req.user });
     } else {
       throw new NotFoundError('User not found');
     }
