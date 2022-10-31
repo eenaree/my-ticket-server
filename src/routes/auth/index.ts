@@ -1,18 +1,18 @@
 import * as express from 'express';
-import * as controller from './auth.controller';
+import { authController } from './auth.controller';
 
 const router = express.Router();
 
-router.get('/kakao', controller.kakaoAuth);
-router.get('/kakao/callback', controller.kakaoAuthCallback);
+router.get('/kakao', authController.passportAuth('kakao'));
+router.get('/kakao/callback', authController.passportAuthCallback('kakao'));
 
-router.get('/google', controller.googleAuth);
-router.get('/google/callback', controller.googleAuthCallback);
+router.get('/google', authController.passportAuth('google'));
+router.get('/google/callback', authController.passportAuthCallback('google'));
 
-router.get('/naver', controller.naverAuth);
-router.get('/naver/callback', controller.naverAuthCallback);
+router.get('/naver', authController.passportAuth('naver'));
+router.get('/naver/callback', authController.passportAuthCallback('naver'));
 
-router.get('/login', controller.login);
-router.post('/logout', controller.logout);
+router.get('/login', authController.login);
+router.post('/logout', authController.logout);
 
 export default router;

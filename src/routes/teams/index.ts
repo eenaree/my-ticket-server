@@ -1,10 +1,10 @@
 import * as express from 'express';
 import { isLoggedIn } from '~/middlewares';
-import * as controller from './team.controller';
+import { teamController } from './team.controller';
 
 const router = express.Router();
 
-router.get('/', isLoggedIn, controller.getMyTeams);
-router.post('/', isLoggedIn, controller.updateMyTeams);
+router.get('/', isLoggedIn, teamController.getMyTeams);
+router.post('/', isLoggedIn, teamController.updateMyTeams);
 
 export default router;
