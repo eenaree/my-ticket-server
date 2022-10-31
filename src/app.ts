@@ -6,6 +6,7 @@ import * as morgan from 'morgan';
 import * as passport from 'passport';
 import { sequelize } from '~/models';
 import routes from '~/routes';
+import { errorHandler } from './lib/errorHandler';
 import { passportConfig } from './passport';
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.set('port', process.env.PORT || 8080);
     console.log('db 연결 성공!');
   } catch (error) {
     console.error('db 연결 실패...');
+    console.error(error);
   }
 })();
 
@@ -49,16 +51,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', routes);
-
-const errorHandler: express.ErrorRequestHandler = (err, req, res, next) => {
-  if (err instanceof Error) {
-    if (res.headersSent) {
-      return next(err);
-    }
-    console.error(err.stack);
-    res.status(500).send({ message: '서버 오류가 발생했습니다.' });
-  }
-};
 
 app.use(errorHandler);
 

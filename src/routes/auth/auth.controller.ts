@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as passport from 'passport';
+import { NotFoundError, UnknownError } from '~/lib/AppError';
 
 const CLIENT_URL = 'http://localhost:4000';
 
@@ -20,19 +21,17 @@ export const naverAuthCallback = passport.authenticate('naver', {
 
 export const login: express.RequestHandler = (req, res) => {
   if (req.user) {
-    res.json({
-      success: true,
-      message: '사용자 인증이 성공적으로 처리됐습니다.',
-      user: req.user,
-    });
+    res.send(req.user);
+  } else {
+    throw new NotFoundError('User not found');
   }
 };
 
-export const logout: express.RequestHandler = (req, res, next) => {
+export const logout: express.RequestHandler = (req, res) => {
   req.logout(error => {
     if (error) {
-      return next(error);
+      throw new UnknownError();
     }
-    res.json({ success: true, message: '로그아웃 성공' });
+    res.send('로그아웃 성공');
   });
 };
