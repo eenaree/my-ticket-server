@@ -1,17 +1,30 @@
 import {
+  DataTypes,
   InferAttributes,
   InferCreationAttributes,
   Model,
   Sequelize,
 } from 'sequelize';
 
-export default class Season_Tickets extends Model<
-  InferAttributes<Season_Tickets>,
-  InferCreationAttributes<Season_Tickets>
+export default class SeasonTickets extends Model<
+  InferAttributes<SeasonTickets>,
+  InferCreationAttributes<SeasonTickets>
 > {
+  declare SeasonId: number;
+  declare TicketId: number;
+
   static initialize(sequelize: Sequelize) {
-    return Season_Tickets.init(
-      {},
+    return SeasonTickets.init(
+      {
+        SeasonId: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+        },
+        TicketId: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+        },
+      },
       {
         tableName: 'season_tickets',
         sequelize,
