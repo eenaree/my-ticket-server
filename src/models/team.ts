@@ -7,7 +7,7 @@ import {
   NonAttribute,
   Sequelize,
 } from 'sequelize';
-import Team_Fans from './team_fans';
+import UserTeams from './user_teams';
 
 export default class Team extends Model<
   InferAttributes<Team>,
@@ -15,7 +15,7 @@ export default class Team extends Model<
 > {
   declare id: CreationOptional<number>;
   declare team: string;
-  declare Team_Fans: NonAttribute<Team_Fans>;
+  declare UserTeams: NonAttribute<UserTeams>;
 
   static initialize(sequelize: Sequelize) {
     return Team.init(

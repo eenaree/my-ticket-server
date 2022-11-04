@@ -12,7 +12,7 @@ export const teamController = {
           (prev, curr) => {
             return {
               ...prev,
-              [curr.team]: curr.Team_Fans.preference,
+              [curr.team]: curr.UserTeams.preference,
             };
           },
           {}
@@ -56,7 +56,7 @@ export const teamController = {
               newTeam => newTeam == exTeam.team
             );
 
-            if (newTeamIndex + 1 == exTeam.Team_Fans.preference) return;
+            if (newTeamIndex + 1 == exTeam.UserTeams.preference) return;
             return req.user?.addTeam(exTeam, {
               through: { preference: newTeamIndex + 1 },
             });
