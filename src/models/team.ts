@@ -31,6 +31,7 @@ export default class Team extends Model<
         },
       },
       {
+        tableName: 'teams',
         sequelize,
         charset: 'utf8',
         timestamps: false,

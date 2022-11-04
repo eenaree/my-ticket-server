@@ -82,6 +82,7 @@ export default class Ticket extends Model<
         },
       },
       {
+        tableName: 'tickets',
         sequelize,
         timestamps: false,
         charset: 'utf8',

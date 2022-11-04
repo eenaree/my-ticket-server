@@ -28,6 +28,7 @@ export default class Season extends Model<
         },
       },
       {
+        tableName: 'seasons',
         sequelize,
         timestamps: false,
         charset: 'utf8',

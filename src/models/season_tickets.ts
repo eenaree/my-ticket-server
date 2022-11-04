@@ -13,6 +13,7 @@ export default class Season_Tickets extends Model<
     return Season_Tickets.init(
       {},
       {
+        tableName: 'season_tickets',
         sequelize,
         charset: 'utf8',
         timestamps: false,

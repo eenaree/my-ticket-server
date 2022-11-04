@@ -50,6 +50,7 @@ export default class User extends Model<
         updatedAt: DataTypes.DATE,
       },
       {
+        tableName: 'users',
         sequelize,
         charset: 'utf8',
       }
