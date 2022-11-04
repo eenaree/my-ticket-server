@@ -6,27 +6,32 @@ import {
   Sequelize,
 } from 'sequelize';
 
-export default class SeasonTickets extends Model<
-  InferAttributes<SeasonTickets>,
-  InferCreationAttributes<SeasonTickets>
+export default class UserTeams extends Model<
+  InferAttributes<UserTeams>,
+  InferCreationAttributes<UserTeams>
 > {
-  declare SeasonId: number;
-  declare TicketId: number;
+  declare preference: number;
+  declare UserId: number;
+  declare TeamId: number;
 
   static initialize(sequelize: Sequelize) {
-    return SeasonTickets.init(
+    return UserTeams.init(
       {
-        SeasonId: {
+        preference: {
           type: DataTypes.INTEGER.UNSIGNED,
           allowNull: false,
         },
-        TicketId: {
+        UserId: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+        },
+        TeamId: {
           type: DataTypes.INTEGER.UNSIGNED,
           allowNull: false,
         },
       },
       {
-        tableName: 'season_tickets',
+        tableName: 'user_teams',
         sequelize,
         charset: 'utf8',
         timestamps: false,
