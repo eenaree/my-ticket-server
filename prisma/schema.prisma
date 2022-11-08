@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model SeasonTickets {
+  seasonId Int    @map("SeasonId") @db.UnsignedInt
+  ticketId Int    @map("TicketId") @db.UnsignedInt
+  season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade, map: "season_tickets_ibfk_1")
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade, map: "season_tickets_ibfk_2")
+
+  @@id([seasonId, ticketId])
+  @@unique([seasonId, ticketId], map: "season_tickets_TicketId_SeasonId_unique")
+  @@index([ticketId], map: "TicketId")
+  @@map("season_tickets")
+}
+
+model Season {
+  id      Int             @id @default(autoincrement()) @db.UnsignedInt
+  season  String          @unique @db.VarChar(255)
+  tickets SeasonTickets[]
+
+  @@map("seasons")
+}
+
+model Stadium {
+  id      Int      @id @default(autoincrement()) @db.UnsignedInt
+  stadium String   @unique @db.VarChar(255)
+  tickets Ticket[]
+
+  @@map("stadiums")
+}
+
+model Team {
+  id    Int         @id @default(autoincrement()) @db.UnsignedInt
+  team  String      @unique @db.VarChar(255)
+  users UserTeams[]
+
+  @@map("teams")
+}
+
+model Ticket {
+  id            Int             @id @default(autoincrement()) @db.UnsignedInt
+  date          String          @db.VarChar(255)
+  homeTeam      String          @db.VarChar(255)
+  awayTeam      String          @db.VarChar(255)
+  homeTeamScore Int
+  awayTeamScore Int
+  scoreType     String          @db.VarChar(255)
+  myTeam        String          @db.VarChar(255)
+  userId        Int?            @map("UserId") @db.UnsignedInt
+  stadiumId     Int?            @map("StadiumId") @db.UnsignedInt
+  user          User?           @relation(fields: [userId], references: [id], map: "tickets_ibfk_1")
+  stadium       Stadium?        @relation(fields: [stadiumId], references: [id], map: "tickets_ibfk_2")
+  seasons       SeasonTickets[]
+
+  @@index([stadiumId], map: "StadiumId")
+  @@index([userId], map: "UserId")
+  @@map("tickets")
+}
+
+model UserTeams {
+  preference Int  @db.UnsignedInt
+  userId     Int  @map("UserId") @db.UnsignedInt
+  teamId     Int  @map("TeamId") @db.UnsignedInt
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_teams_ibfk_1")
+  team       Team @relation(fields: [teamId], references: [id], onDelete: Cascade, map: "user_teams_ibfk_2")
+
+  @@id([userId, teamId])
+  @@unique([userId, teamId], map: "user_teams_TeamId_UserId_unique")
+  @@index([teamId], map: "TeamId")
+  @@map("user_teams")
+}
+
+model User {
+  id        Int         @id @default(autoincrement()) @db.UnsignedInt
+  email     String      @unique @db.VarChar(255)
+  nickname  String      @db.VarChar(255)
+  provider  String?     @db.VarChar(255)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  tickets   Ticket[]
+  myTeams   UserTeams[]
+
+  @@map("users")
+}

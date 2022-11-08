@@ -1,8 +1,7 @@
+import { Ticket } from '@prisma/client';
+import * as dayjs from 'dayjs';
 import * as express from 'express';
-import { InferAttributes, Op, WhereOptions } from 'sequelize';
-import { db } from '~/models';
-import Season from '~/models/season';
-import Ticket from '~/models/ticket';
+import db from '~/db';
 import { TypedExpressBody, TypedExpressQuery } from '~/typings/db';
 
 interface TicketBody {
@@ -29,36 +28,39 @@ export const ticketController = {
     res: express.Response<Ticket>
   ) {
     try {
-      const stadium = await db.Stadium.findOne({
-        where: { stadium: req.body.stadium },
-      });
-
       if (req.user) {
-        const ticket = await db.Ticket.create({
-          date: new Date(
-            req.body.matchDate.year,
-            req.body.matchDate.month - 1,
-            req.body.matchDate.date
-          ),
-          homeTeam: req.body.homeTeam,
-          awayTeam: req.body.awayTeam,
-          myTeam: req.body.myTeam,
-          scoreType: req.body.scoreType,
-          homeTeamScore: req.body.score.homeTeam,
-          awayTeamScore: req.body.score.awayTeam,
-          UserId: req.user.id,
-          StadiumId: stadium ? stadium.id : undefined,
-        });
-
         const seasons = await Promise.all(
           req.body.seasons.map(season =>
-            db.Season.findOne({ where: { season } })
+            db.season.findUnique({ where: { season } })
           )
         );
-        await ticket.addSeasons(
-          seasons.filter((season): season is Season => season instanceof Season)
-        );
-        res.send(ticket);
+
+        const newTicket = await db.ticket.create({
+          data: {
+            date: dayjs(
+              new Date(
+                req.body.matchDate.year,
+                req.body.matchDate.month - 1,
+                req.body.matchDate.date
+              )
+            ).format('YYYY-MM-DD'),
+            homeTeam: req.body.homeTeam,
+            awayTeam: req.body.awayTeam,
+            myTeam: req.body.myTeam,
+            scoreType: req.body.scoreType,
+            homeTeamScore: req.body.score.homeTeam,
+            awayTeamScore: req.body.score.awayTeam,
+            user: { connect: { id: req.user.id } },
+            stadium: { connect: { stadium: req.body.stadium } },
+            seasons: {
+              create: seasons.map(season => ({
+                season: { connect: { id: season?.id } },
+              })),
+            },
+          },
+        });
+
+        res.send(newTicket);
       }
     } catch (error) {
       console.error(error);
@@ -66,47 +68,37 @@ export const ticketController = {
   },
 
   async getMyTickets(
-    req: TypedExpressQuery<{ lastDate?: string; lastId?: string }>,
-    res: express.Response<Ticket[]>
+    req: TypedExpressQuery<{ lastId?: string }>,
+    res: express.Response
   ) {
     try {
       if (req.user) {
-        let whereClause: WhereOptions<InferAttributes<Ticket>> = {
-          UserId: req.user.id,
-        };
-        if (req.query.lastDate && req.query.lastId) {
-          whereClause = {
-            UserId: req.user.id,
-            [Op.or]: [
-              {
-                date: {
-                  [Op.lt]: new Date(req.query.lastDate), // lastDate 이전 날짜 티켓
-                },
-              },
-              {
-                [Op.and]: [
-                  { date: { [Op.eq]: new Date(req.query.lastDate) } },
-                  { id: { [Op.gt]: req.query.lastId } }, // lastDate 와 동일한 날짜의 티켓이면서 가져오지 않은 티켓
-                ],
-              },
-            ],
-          };
-        }
-
-        const tickets = await db.Ticket.findAll({
-          where: whereClause,
-          attributes: {
-            exclude: ['UserId', 'StadiumId'],
+        const tickets = await db.ticket.findMany({
+          where: {
+            userId: req.user.id,
           },
-          include: [
-            { model: db.Season, through: { attributes: [] } },
-            { model: db.Stadium },
-          ],
-          order: [['date', 'DESC']],
-          limit: 20,
+          orderBy: { date: 'desc' },
+          take: 20,
+          include: {
+            stadium: true,
+            seasons: {
+              include: { season: true },
+            },
+          },
+          skip: 1,
+          cursor: req.query.lastId ? { id: +req.query.lastId } : undefined,
         });
 
-        res.send(tickets);
+        res.send(
+          tickets.map(ticket => ({
+            ...ticket,
+            opponentTeam:
+              ticket.homeTeam === ticket.myTeam
+                ? ticket.awayTeam
+                : ticket.homeTeam,
+            seasons: ticket.seasons.map(season => season.season),
+          }))
+        );
       }
     } catch (error) {
       console.error(error);

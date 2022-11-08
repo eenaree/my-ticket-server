@@ -4,7 +4,6 @@ import * as express from 'express';
 import * as session from 'express-session';
 import * as morgan from 'morgan';
 import * as passport from 'passport';
-import { sequelize } from '~/models';
 import routes from '~/routes';
 import { errorHandler } from './lib/errorHandler';
 import { passportConfig } from './passport';
@@ -17,16 +16,6 @@ const app = express();
 const prod = process.env.NODE_ENV === 'production';
 
 app.set('port', process.env.PORT || 8080);
-
-(async function () {
-  try {
-    await sequelize.sync();
-    console.log('db 연결 성공!');
-  } catch (error) {
-    console.error('db 연결 실패...');
-    console.error(error);
-  }
-})();
 
 app.use(
   cors({

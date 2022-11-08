@@ -1,5 +1,5 @@
 import * as passport from 'passport';
-import User from '~/models/user';
+import db from '~/db';
 import { googleStrategy } from './googleStrategy';
 import { kakaoStrategy } from './kakaoStrategy';
 import { naverStrategy } from './naverStrategy';
@@ -11,7 +11,7 @@ export function passportConfig() {
 
   passport.deserializeUser<number>(async (id, done) => {
     try {
-      const user = await User.findByPk(id);
+      const user = await db.user.findUnique({ where: { id } });
       if (!user) {
         done(null, false);
       } else {
