@@ -20,32 +20,32 @@ model SeasonTickets {
 }
 
 model Season {
-  id            Int             @id @default(autoincrement()) @db.UnsignedInt
-  season        String          @db.VarChar(255)
-  seasonTickets SeasonTickets[]
+  id      Int             @id @default(autoincrement()) @db.UnsignedInt
+  season  String          @unique @db.VarChar(255)
+  tickets SeasonTickets[]
 
   @@map("seasons")
 }
 
 model Stadium {
   id      Int      @id @default(autoincrement()) @db.UnsignedInt
-  stadium String   @db.VarChar(255)
+  stadium String   @unique @db.VarChar(255)
   tickets Ticket[]
 
   @@map("stadiums")
 }
 
 model Team {
-  id        Int         @id @default(autoincrement()) @db.UnsignedInt
-  team      String      @db.VarChar(255)
-  userTeams UserTeams[]
+  id    Int         @id @default(autoincrement()) @db.UnsignedInt
+  team  String      @unique @db.VarChar(255)
+  users UserTeams[]
 
   @@map("teams")
 }
 
 model Ticket {
   id            Int             @id @default(autoincrement()) @db.UnsignedInt
-  date          DateTime        @db.Date
+  date          String          @db.VarChar(255)
   homeTeam      String          @db.VarChar(255)
   awayTeam      String          @db.VarChar(255)
   homeTeamScore Int
@@ -56,7 +56,7 @@ model Ticket {
   stadiumId     Int?            @map("StadiumId") @db.UnsignedInt
   user          User?           @relation(fields: [userId], references: [id], map: "tickets_ibfk_1")
   stadium       Stadium?        @relation(fields: [stadiumId], references: [id], map: "tickets_ibfk_2")
-  seasonTickets SeasonTickets[]
+  seasons       SeasonTickets[]
 
   @@index([stadiumId], map: "StadiumId")
   @@index([userId], map: "UserId")
@@ -78,13 +78,13 @@ model UserTeams {
 
 model User {
   id        Int         @id @default(autoincrement()) @db.UnsignedInt
-  email     String      @db.VarChar(255)
+  email     String      @unique @db.VarChar(255)
   nickname  String      @db.VarChar(255)
   provider  String?     @db.VarChar(255)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   tickets   Ticket[]
-  userTeams UserTeams[]
+  myTeams   UserTeams[]
 
   @@map("users")
 }
