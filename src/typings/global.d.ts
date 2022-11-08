@@ -1,4 +1,4 @@
-import UserModel from '~/models/user';
+import { User as UserModel } from '@prisma/client';
 
 declare global {
   namespace Express {
