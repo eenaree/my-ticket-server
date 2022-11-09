@@ -1,10 +1,10 @@
 import * as express from 'express';
 import { isLoggedIn } from '~/middlewares';
-import { ticketController } from './tickets.controller';
+import { ticketController } from './ticket.controller';
 
 const router = express.Router();
 
-router.post('/', isLoggedIn, ticketController.createTicket);
-router.get('/my', isLoggedIn, ticketController.getMyTickets);
+router.post('/', isLoggedIn, ticketController.create);
+router.get('/my', isLoggedIn, ticketController.getAll);
 
 export default router;
