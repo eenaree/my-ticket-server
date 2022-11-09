@@ -81,7 +81,7 @@ export const ticketController = {
               include: { season: true },
             },
           },
-          skip: 1,
+          skip: req.query.lastId ? 1 : 0,
           cursor: req.query.lastId ? { id: +req.query.lastId } : undefined,
         });
 
