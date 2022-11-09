@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import * as passport from 'passport';
 import { Strategy } from 'passport-kakao';
-import db from '~/db';
+import { userService } from '~/services/user';
 
 dotenv.config();
 
@@ -15,16 +15,12 @@ export function kakaoStrategy() {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          let user = await db.user.findUnique({
-            where: { email: profile.id },
-          });
+          let user = await userService.findByProfileId(profile.id);
           if (!user) {
-            user = await db.user.create({
-              data: {
-                email: profile.id,
-                nickname: profile.displayName,
-                provider: profile.provider,
-              },
+            user = await userService.create({
+              email: profile.id,
+              nickname: profile.displayName,
+              provider: profile.provider,
             });
           }
           return done(null, user);
