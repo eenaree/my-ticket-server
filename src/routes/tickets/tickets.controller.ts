@@ -38,11 +38,7 @@ export const ticketController = {
         const newTicket = await db.ticket.create({
           data: {
             date: dayjs(
-              new Date(
-                req.body.matchDate.year,
-                req.body.matchDate.month - 1,
-                req.body.matchDate.date
-              )
+              `${req.body.matchDate.year}-${req.body.matchDate.month}-${req.body.matchDate.date}`
             ).format('YYYY-MM-DD'),
             homeTeam: req.body.homeTeam,
             awayTeam: req.body.awayTeam,
